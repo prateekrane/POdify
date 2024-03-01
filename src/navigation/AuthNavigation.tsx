@@ -5,8 +5,13 @@ import SignIn from '../views/auth/SignIn';
 import LostPwd from '../views/auth/Lostpwd';
 import Verification from '../views/auth/Verification';
 import {AuthStackParamsList} from '../@types/navigatoin';
+import {useSelector} from 'react-redux';
+import {getAuthState} from '../store/auth';
 const Stack = createStackNavigator<AuthStackParamsList>();
 const AuthNavigation = () => {
+  const authState = useSelector(getAuthState);
+
+  console.log(authState);
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="SignUp" component={SignUp} />

@@ -1,9 +1,7 @@
 import React from 'react';
 import colors from '../utils/colors';
 import {FC} from 'react';
-import {StyleSheet, Text} from 'react-native';
-
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 interface Props {
   title: string;

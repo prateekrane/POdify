@@ -1,5 +1,5 @@
 import {FC, useEffect, useRef, useState} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {Alert, StyleSheet, Text, TextInput, View} from 'react-native';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import AppLink from '../../ui/Applink';
 import AuthFormContainer from '../../components/AuthContainer';
@@ -53,7 +53,8 @@ const Verification: FC<Props> = ({route}) => {
       });
       navigation.navigate('SignIn');
     } catch (error) {
-      console.log('Error inside verifaication : ', error);
+      // console.log('Error inside verifaication : ', error);
+      Alert.alert('Error', 'Invalid OTP');
     }
   };
   const requestForOTP = async () => {

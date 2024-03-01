@@ -45,7 +45,6 @@ const AuthInputField: FC<Props> = props => {
     secureTextEntry,
     containerStyle,
     name,
-    rightIcon,
   } = props;
 
   const errorMsg = touched[name] && errors[name] ? errors[name] : '';
@@ -83,9 +82,6 @@ const AuthInputField: FC<Props> = props => {
         value={values[name]}
         onBlur={handleBlur(name)}
       />
-      {rightIcon ? (
-        <Pressable style={styles.righticon}>{rightIcon}</Pressable>
-      ) : null}
     </Animated.View>
   );
 };

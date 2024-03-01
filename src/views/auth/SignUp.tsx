@@ -3,7 +3,7 @@ import Form from '../../components/form';
 
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {FC, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import * as yup from 'yup';
 import SubmitBtn from '../../components/form/SubmitBtn';
 import React from 'react';
@@ -14,6 +14,7 @@ import AuthFormContainer from '../../components/AuthContainer';
 import {AuthStackParamsList} from '../../@types/navigatoin';
 import {FormikHelpers} from 'formik';
 import client from '../../api/client';
+import axios from 'axios';
 const signupSchema = yup.object({
   name: yup
     .string()
@@ -37,6 +38,7 @@ const signupSchema = yup.object({
 });
 
 interface Props {}
+
 interface NewUser {
   name: string;
   email: string;
@@ -51,20 +53,24 @@ const initialValues = {
 
 const SignUp: FC<Props> = props => {
   const navigation = useNavigation<NavigationProp<AuthStackParamsList>>();
+
   const handleSubmit = async (
     values: NewUser,
     actions: FormikHelpers<NewUser>,
   ) => {
     try {
-      const {data} = await client.post('/auth/create', {
+      // we want to send these information to our api
+      const {data} = await client.post('auth/create', {
         ...values,
       });
 
       navigation.navigate('Verificatoin', {userInfo: data.user});
     } catch (error) {
-      console.log('Sign up error: ', error);
+      // console.log('Sign up error: ', error);
+      Alert.alert('Error', 'Something went wrong!');
     }
   };
+
   return (
     <Form
       onSubmit={handleSubmit}
@@ -72,17 +78,17 @@ const SignUp: FC<Props> = props => {
       validationSchema={signupSchema}>
       <AuthFormContainer
         heading="Welcome!"
-        subHeading="Lets start with creating an account.">
+        subHeading="Let's get started by creating your account.">
         <View style={styles.formContainer}>
           <AuthInputField
             name="name"
-            placeholder="Honey"
+            placeholder="John Doe"
             label="Name"
             containerStyle={styles.marginBottom}
           />
           <AuthInputField
             name="email"
-            placeholder="honey@gmail.com"
+            placeholder="john@email.com"
             label="Email"
             keyboardType="email-address"
             autoCapitalize="none"
@@ -93,24 +99,20 @@ const SignUp: FC<Props> = props => {
             placeholder="********"
             label="Password"
             autoCapitalize="none"
-            secureTextEntry
+            secureTextEntry={true}
             containerStyle={styles.marginBottom}
           />
-          <SubmitBtn title="Sign Up" />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              marginTop: 20,
-            }}>
+          <SubmitBtn title="Sign up" />
+
+          <View style={styles.linkContainer}>
             <AppLink
-              title="I Forgot my password"
+              title="I Lost My Password"
               onPress={() => {
                 navigation.navigate('Lostpwd');
               }}
             />
             <AppLink
-              title="Sign In"
+              title="Sign in"
               onPress={() => {
                 navigation.navigate('SignIn');
               }}
@@ -125,7 +127,6 @@ const SignUp: FC<Props> = props => {
 const styles = StyleSheet.create({
   formContainer: {
     width: '100%',
-    // padding in the x direction (left and the right)
   },
   marginBottom: {
     marginBottom: 20,

@@ -2,7 +2,7 @@ import AuthInputField from '../../components/form/AuthInputField';
 import Form from '../../components/form';
 
 import {FC} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import * as yup from 'yup';
 import SubmitBtn from '../../components/form/SubmitBtn';
 import React from 'react';
@@ -13,6 +13,8 @@ import AuthFormContainer from '../../components/AuthContainer';
 import {AuthStackParamsList} from '../../@types/navigatoin';
 import {FormikHelpers} from 'formik';
 import client from '../../api/client';
+import {updateLoggedInState, updateProfile} from '../../store/auth';
+import {useDispatch} from 'react-redux';
 const signupSchema = yup.object({
   email: yup
     .string()
@@ -41,16 +43,18 @@ const initialValues = {
 
 const SignIn: FC<Props> = props => {
   const navigation = useNavigation<NavigationProp<AuthStackParamsList>>();
-
+  const dispatch = useDispatch();
   const handleSubmit = async (
     values: SignInUserInfo,
     actions: FormikHelpers<SignInUserInfo>,
   ) => {
     try {
       const {data} = await client.post('/auth/sign-in', {...values});
-      console.log(data);
+      dispatch(updateProfile(data.profile));
+      dispatch(updateLoggedInState(true));
     } catch (error) {
-      console.log('Sign in error: ', error);
+      // console.log('Sign in error: ', error);
+      Alert.alert('Error', 'Invalid credentials');
     }
   };
   return (
