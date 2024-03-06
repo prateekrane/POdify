@@ -9,6 +9,10 @@ import React from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AuthStackParamsList} from '../../@types/navigatoin';
 import client from '../../api/client';
+import catchAsyncError from '../../api/catchError';
+import {upldateNotification} from '../../store/notification';
+import {useDispatch} from 'react-redux';
+import {ErrorMessage} from 'formik';
 
 type Props = NativeStackScreenProps<AuthStackParamsList, 'Verificatoin'>;
 
@@ -20,6 +24,7 @@ const Verification: FC<Props> = ({route}) => {
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
   const [countDown, setCountDown] = useState(60);
   const [canSendNewOtpRequest, setCanSendNewOtpRequest] = useState(false);
+  const dispatch = useDispatch();
   const {userInfo} = route.params;
 
   const inputRef = useRef<TextInput>(null);
@@ -44,17 +49,21 @@ const Verification: FC<Props> = ({route}) => {
   });
 
   const handleSubmit = async () => {
-    if (!isValidOtp) return;
+    if (!isValidOtp)
+      return dispatch(
+        upldateNotification({message: 'Invalid OTP', type: 'error'}),
+      );
 
     try {
       const {data} = await client.post('/auth/verify-email', {
         userId: userInfo.id,
         token: otp.join(''),
       });
+      dispatch(upldateNotification({message: data.message, type: 'success'}));
       navigation.navigate('SignIn');
     } catch (error) {
-      // console.log('Error inside verifaication : ', error);
-      Alert.alert('Error', 'Invalid OTP');
+      const errorMessage = catchAsyncError(error);
+      dispatch(upldateNotification({message: errorMessage, type: 'error'}));
     }
   };
   const requestForOTP = async () => {

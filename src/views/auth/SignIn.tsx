@@ -15,6 +15,9 @@ import {FormikHelpers} from 'formik';
 import client from '../../api/client';
 import {updateLoggedInState, updateProfile} from '../../store/auth';
 import {useDispatch} from 'react-redux';
+import {Keys, saveToAsyncStorage} from '../../utils/asyncStorage';
+import catchAsyncError from '../../api/catchError';
+import {upldateNotification} from '../../store/notification';
 const signupSchema = yup.object({
   email: yup
     .string()
@@ -50,11 +53,14 @@ const SignIn: FC<Props> = props => {
   ) => {
     try {
       const {data} = await client.post('/auth/sign-in', {...values});
+
+      await saveToAsyncStorage(Keys.AUTH_TOKEN, data.token);
+
       dispatch(updateProfile(data.profile));
       dispatch(updateLoggedInState(true));
     } catch (error) {
-      // console.log('Sign in error: ', error);
-      Alert.alert('Error', 'Invalid credentials');
+      const errorMessage = catchAsyncError(error);
+      dispatch(upldateNotification({message: errorMessage, type: 'error'}));
     }
   };
   return (

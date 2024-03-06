@@ -11,7 +11,6 @@ const Stack = createStackNavigator<AuthStackParamsList>();
 const AuthNavigation = () => {
   const authState = useSelector(getAuthState);
 
-  console.log(authState);
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="SignUp" component={SignUp} />

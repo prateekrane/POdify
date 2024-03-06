@@ -13,6 +13,9 @@ import AuthFormContainer from '../../components/AuthContainer';
 import {AuthStackParamsList} from '../../@types/navigatoin';
 import {FormikHelpers} from 'formik';
 import client from '../../api/client';
+import catchAsyncError from '../../api/catchError';
+import {upldateNotification} from '../../store/notification';
+import {useDispatch} from 'react-redux';
 const signupSchema = yup.object({
   email: yup
     .string()
@@ -31,19 +34,21 @@ const initialValues = {
   email: '',
 };
 
-const handleSubmit = async (
-  values: InitialValues,
-  actions: FormikHelpers<InitialValues>,
-) => {
-  try {
-    const {data} = await client.post('/auth/forget-password', {...values});
-    console.log(data);
-  } catch (error) {
-    console.log('Lost password error: ', error);
-  }
-};
 const LostPwd: FC<Props> = props => {
   const navigation = useNavigation<NavigationProp<AuthStackParamsList>>();
+  const dispatch = useDispatch();
+  const handleSubmit = async (
+    values: InitialValues,
+    actions: FormikHelpers<InitialValues>,
+  ) => {
+    try {
+      const {data} = await client.post('/auth/forget-password', {...values});
+      console.log(data);
+    } catch (error) {
+      const errorMessage = catchAsyncError(error);
+      dispatch(upldateNotification({message: errorMessage, type: 'error'}));
+    }
+  };
   return (
     <Form
       onSubmit={handleSubmit}

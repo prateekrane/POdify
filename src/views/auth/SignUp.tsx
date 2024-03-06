@@ -14,7 +14,10 @@ import AuthFormContainer from '../../components/AuthContainer';
 import {AuthStackParamsList} from '../../@types/navigatoin';
 import {FormikHelpers} from 'formik';
 import client from '../../api/client';
-import axios from 'axios';
+import axios, {isAxiosError} from 'axios';
+import catchAsyncError from '../../api/catchError';
+import {useDispatch} from 'react-redux';
+import {upldateNotification} from '../../store/notification';
 const signupSchema = yup.object({
   name: yup
     .string()
@@ -53,6 +56,7 @@ const initialValues = {
 
 const SignUp: FC<Props> = props => {
   const navigation = useNavigation<NavigationProp<AuthStackParamsList>>();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (
     values: NewUser,
@@ -66,8 +70,8 @@ const SignUp: FC<Props> = props => {
 
       navigation.navigate('Verificatoin', {userInfo: data.user});
     } catch (error) {
-      // console.log('Sign up error: ', error);
-      Alert.alert('Error', 'Something went wrong!');
+      const errorMessage = catchAsyncError(error);
+      dispatch(upldateNotification({message: errorMessage, type: 'error'}));
     }
   };
 
@@ -82,13 +86,13 @@ const SignUp: FC<Props> = props => {
         <View style={styles.formContainer}>
           <AuthInputField
             name="name"
-            placeholder="John Doe"
+            placeholder="Honey"
             label="Name"
             containerStyle={styles.marginBottom}
           />
           <AuthInputField
             name="email"
-            placeholder="john@email.com"
+            placeholder="honey@email.com"
             label="Email"
             keyboardType="email-address"
             autoCapitalize="none"

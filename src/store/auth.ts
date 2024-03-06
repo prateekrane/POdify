@@ -1,4 +1,4 @@
-import {PayloadAction, createSelector, createSlice} from '@reduxjs/toolkit';
+import {createSelector, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '.';
 
 export interface UserProfile {
@@ -8,17 +8,19 @@ export interface UserProfile {
   verified: boolean;
   avatar?: string;
   followers: number;
-  following: number;
+  followings: number;
 }
 
 interface AuthState {
   profile: UserProfile | null;
-  loggeednIn: boolean;
+  loggedIn: boolean;
+  busy: boolean;
 }
 
 const initialState: AuthState = {
   profile: null,
-  loggeednIn: false,
+  loggedIn: false,
+  busy: false,
 };
 
 const slice = createSlice({
@@ -29,19 +31,21 @@ const slice = createSlice({
       authState.profile = payload;
     },
     updateLoggedInState(authState, {payload}) {
-      authState.loggeednIn = payload;
+      authState.loggedIn = payload;
+    },
+    updateBusyState(authState, {payload}: PayloadAction<boolean>) {
+      authState.busy = payload;
     },
   },
 });
-export const {updateLoggedInState, updateProfile} = slice.actions;
+
+export const {updateLoggedInState, updateProfile, updateBusyState} =
+  slice.actions;
 
 export const getAuthState = createSelector(
-  (state: RootState) => {
-    return state;
-  },
-  authState => {
-    return authState;
-  },
+  (state: RootState) => state,
+  ({auth}) => auth,
 );
+// export const getAuthState = (state: RootState) => state;
 
 export default slice.reducer;
