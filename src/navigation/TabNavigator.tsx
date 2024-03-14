@@ -6,6 +6,7 @@ import Profile from '../views/Profile';
 import Uplaod from '../views/Uplaod';
 import colors from '../utils/colors';
 import {View, Image} from 'react-native';
+import ProfileNavigator from './ProfileNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,8 +38,8 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="ProfileScreen"
-        component={Profile}
+        name="ProfileNavigator"
+        component={ProfileNavigator}
         options={{
           tabBarLabel: 'Profile',
           tabBarLabelStyle: {fontSize: 15, fontWeight: 'bold'},

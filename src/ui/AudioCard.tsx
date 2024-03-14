@@ -5,9 +5,11 @@ import {View, Text, StyleSheet, Image, Pressable} from 'react-native';
 interface Props {
   title: string;
   poster?: string;
+  onPress?(): void;
+  onLongPress?(): void;
 }
 
-const AudioCard: FC<Props> = ({title, poster}) => {
+const AudioCard: FC<Props> = ({title, onPress, onLongPress, poster}) => {
   const scource = poster
     ? {
         uri: poster,
@@ -15,12 +17,8 @@ const AudioCard: FC<Props> = ({title, poster}) => {
     : require('../ui/assets/music.jpeg');
   return (
     <Pressable
-      onPress={() => {
-        console.log('on audio Press');
-      }}
-      onLongPress={() => {
-        console.log('on audio LongPress');
-      }}
+      onPress={onPress}
+      onLongPress={onLongPress}
       style={{width: 100, marginRight: 15}}>
       <Image
         source={scource}

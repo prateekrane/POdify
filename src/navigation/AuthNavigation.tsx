@@ -9,8 +9,6 @@ import {useSelector} from 'react-redux';
 import {getAuthState} from '../store/auth';
 const Stack = createStackNavigator<AuthStackParamsList>();
 const AuthNavigation = () => {
-  const authState = useSelector(getAuthState);
-
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="SignUp" component={SignUp} />

@@ -5,13 +5,17 @@ import {useFetchRecommendedAudios} from '../hooks/query';
 import GridView from '../ui/GridView';
 import PulseAnimationContainer from '../ui/PulseAnimationContainer';
 import colors from '../utils/colors';
+import {AudioData} from '../@types/audio';
 
-interface Props {}
+interface Props {
+  onAudioPress(item: AudioData, data: AudioData[]): void;
+  onAudioLongPress(item: AudioData, data: AudioData[]): void;
+}
 
 const dummyData = new Array(6).fill('');
 
-const RecommendedAudios: FC<Props> = props => {
-  const {data, isLoading} = useFetchRecommendedAudios();
+const RecommendedAudios: FC<Props> = ({onAudioPress, onAudioLongPress}) => {
+  const {data = [], isLoading} = useFetchRecommendedAudios();
 
   const getPoster = (poster?: string) => {
     return poster ? {uri: poster} : require('../ui/assets/music.jpeg');
@@ -49,7 +53,13 @@ const RecommendedAudios: FC<Props> = props => {
         data={data || []}
         renderItem={item => {
           return (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                onAudioPress(item, data);
+              }}
+              onLongPress={() => {
+                onAudioLongPress(item, data);
+              }}>
               <Image
                 source={getPoster(item.poster)}
                 style={{width: '100%', aspectRatio: 1, borderRadius: 7}}

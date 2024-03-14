@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import FileSelector from './FileSelector';
+import BasicModalContainer from '../ui/BasicModalContainer';
 
 interface Props<T> {
   data: T[];
@@ -39,44 +40,38 @@ const CategorySelector = <T extends any>({
   };
 
   return (
-    <Modal onRequestClose={onRequestClose} visible={visible} transparent>
-      <View style={styles.modalContainer}>
-        <Pressable onPress={onRequestClose} style={styles.backdrop} />
-        <View style={styles.modal}>
-          <Text style={styles.title}>{title}</Text>
-
-          <ScrollView>
-            {data.map((item, index) => {
-              return (
-                <Pressable
-                  onPress={() => handleSelect(item, index)}
-                  key={index}
-                  style={styles.selectorContainer}>
-                  {selectedIndex === index ? (
-                    // <FileSelector icon="radio-on" />
-                    <TouchableOpacity>
-                      <Image
-                        source={require('../ui/assets/radio-on.png')}
-                        style={{height: 20, width: 20}}
-                      />
-                    </TouchableOpacity>
-                  ) : (
-                    // <FileSelector icon="radio-off" />
-                    <TouchableOpacity>
-                      <Image
-                        source={require('../ui/assets/radio-off.png')}
-                        style={{height: 20, width: 20}}
-                      />
-                    </TouchableOpacity>
-                  )}
-                  {renderItem(item)}
-                </Pressable>
-              );
-            })}
-          </ScrollView>
-        </View>
-      </View>
-    </Modal>
+    <BasicModalContainer visible={visible} onRequestClose={onRequestClose}>
+      <Text style={styles.title}>{title}</Text>
+      <ScrollView>
+        {data.map((item, index) => {
+          return (
+            <Pressable
+              onPress={() => handleSelect(item, index)}
+              key={index}
+              style={styles.selectorContainer}>
+              {selectedIndex === index ? (
+                // <FileSelector icon="radio-on" />
+                <TouchableOpacity>
+                  <Image
+                    source={require('../ui/assets/radio-on.png')}
+                    style={{height: 20, width: 20}}
+                  />
+                </TouchableOpacity>
+              ) : (
+                // <FileSelector icon="radio-off" />
+                <TouchableOpacity>
+                  <Image
+                    source={require('../ui/assets/radio-off.png')}
+                    style={{height: 20, width: 20}}
+                  />
+                </TouchableOpacity>
+              )}
+              {renderItem(item)}
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+    </BasicModalContainer>
   );
 };
 

@@ -12,6 +12,10 @@ export const clearAsyncStorage = async () => {
   return await AsyncStorage.clear();
 };
 
+export const removeFromAsyncStorage = async (key: string) => {
+  return await AsyncStorage.removeItem(key);
+};
+
 export enum Keys {
   AUTH_TOKEN = 'AUTH_TOKEN',
 }

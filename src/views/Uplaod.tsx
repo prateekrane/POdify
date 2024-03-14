@@ -15,12 +15,13 @@ import {categories} from '../utils/categories';
 import {DocumentPickerResponse, types} from 'react-native-document-picker';
 import * as yup from 'yup';
 import {Keys, getFromAsyncStorage} from '../utils/asyncStorage';
-import client from '../api/client';
+
 import Progress from '../ui/Progress';
 import {mapRange} from '../utils/math';
 import catchAsyncError from '../api/catchError';
 import {upldateNotification} from '../store/notification';
 import {useDispatch} from 'react-redux';
+import {getClient} from '../api/client';
 
 interface Props {}
 
@@ -89,13 +90,8 @@ const Upload: FC<Props> = props => {
 
       const token = await getFromAsyncStorage(Keys.AUTH_TOKEN);
 
-      console.log(token);
-
+      const client = await getClient({'Content-Type': 'multipart/form-data;'});
       const {data} = await client.post('/audio/create', formData, {
-        headers: {
-          Authorization: 'Bearer ' + token,
-          'Content-Type': 'multipart/form-data;',
-        },
         onUploadProgress(progressEvent) {
           const uploaded = mapRange({
             inputMin: 0,

@@ -10,3 +10,8 @@ export type AuthStackParamsList = {
   Verificatoin: {userInfo: NewUserResponse};
   Lostpwd: undefined;
 };
+
+export type ProfileNavigatorStackParamList = {
+  Profile: undefined;
+  ProfileSettings: undefined;
+};
